@@ -30,7 +30,7 @@ export const Panel = twc.div`
 export const Dialog = twc.div`
   fixed inset-0 
   flex items-center justify-center 
-  bg-black bg-opacity-50 
+  bg-black/30 backdrop-blur-sm 
   z-50
   cursor-pointer
 `;
