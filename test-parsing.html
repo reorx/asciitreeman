@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Parser</title>
+    <script type="module">
+        import { parseTreeOutput } from './src/utils/treeParser.ts';
+        
+        const input = `next-test
+├── public
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+├── src
+│   └── app
+│       ├── favicon.ico
+│       ├── globals.css
+│       ├── layout.tsx
+│       └── page.tsx
+├── next-env.d.ts
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── README.md
+└── tsconfig.json`;
+
+        const result = parseTreeOutput(input);
+        console.log('Parsed result:', result);
+        
+        const printTree = (nodes, indent = '') => {
+            nodes.forEach(node => {
+                console.log(`${indent}${node.name} (${node.type})`);
+                if (node.children.length > 0) {
+                    printTree(node.children, indent + '  ');
+                }
+            });
+        };
+        
+        console.log('\nTree structure:');
+        console.log(`Root: ${result.root}`);
+        printTree(result.nodes);
+    </script>
+</head>
+<body>
+    <h1>Check console for parser output</h1>
+</body>
+</html>

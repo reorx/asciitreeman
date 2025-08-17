@@ -4,7 +4,8 @@
       "Bash(mv:*)",
       "Bash(rm:*)",
       "Bash(npx tailwindcss init:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(node:*)"
     ],
     "deny": []
   }
