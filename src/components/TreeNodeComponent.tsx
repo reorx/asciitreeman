@@ -5,23 +5,30 @@ import { TreeNodeContainer, TreeNodeActions, IconButton } from '../styles/compon
 interface TreeNodeProps {
   node: TreeNode;
   depth: number;
+  isActive?: boolean;
+  activeNodeId?: string | null;
   onToggle: (nodeId: string) => void;
   onDelete: (nodeId: string) => void;
   onAdd: (nodeId: string, isChild: boolean) => void;
   onRename: (nodeId: string) => void;
   onMove: (nodeId: string, direction: 'up' | 'down') => void;
+  onNodeClick: (nodeId: string) => void;
 }
 
 export const TreeNodeComponent: React.FC<TreeNodeProps> = ({
   node,
   depth,
+  isActive = false,
+  activeNodeId,
   onToggle,
   onDelete,
   onAdd,
   onRename,
   onMove,
+  onNodeClick,
 }) => {
   const handleClick = () => {
+    onNodeClick(node.id);
     if (node.children.length > 0) {
       onToggle(node.id);
     }
@@ -29,7 +36,11 @@ export const TreeNodeComponent: React.FC<TreeNodeProps> = ({
 
   return (
     <>
-      <TreeNodeContainer style={{ paddingLeft: `${depth * 20 + 8}px` }} onClick={handleClick}>
+      <TreeNodeContainer
+        style={{ paddingLeft: `${depth * 20 + 8}px` }}
+        onClick={handleClick}
+        className={isActive ? 'bg-blue-100 border-l-2 border-blue-500' : ''}
+      >
         <span className="flex items-center gap-2">
           {node.children.length > 0 && (
             <span className="text-gray-500 inline-block w-3 text-center">{node.isExpanded ? '▼' : '▶'}</span>
@@ -108,11 +119,14 @@ export const TreeNodeComponent: React.FC<TreeNodeProps> = ({
             key={child.id}
             node={child}
             depth={depth + 1}
+            isActive={activeNodeId === child.id}
+            activeNodeId={activeNodeId}
             onToggle={onToggle}
             onDelete={onDelete}
             onAdd={onAdd}
             onRename={onRename}
             onMove={onMove}
+            onNodeClick={onNodeClick}
           />
         ))}
     </>

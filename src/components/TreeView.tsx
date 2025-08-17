@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { TreeNode } from '../types/tree';
 import { TreeNodeComponent } from './TreeNodeComponent';
 import { InputDialog } from './InputDialog';
@@ -12,6 +12,8 @@ interface TreeViewProps {
 }
 
 export const TreeView: React.FC<TreeViewProps> = ({ root, nodes, onNodesChange, onRootChange }) => {
+  const [activeNodeId, setActiveNodeId] = useState<string | null>(null);
+  const treeContainerRef = useRef<HTMLDivElement>(null);
   const [dialogState, setDialogState] = useState<{
     isOpen: boolean;
     action: 'add' | 'rename' | null;
@@ -222,6 +224,47 @@ export const TreeView: React.FC<TreeViewProps> = ({ root, nodes, onNodesChange, 
     return node.isExpanded && node.children.every(checkAllExpanded);
   };
 
+  const handleNodeClick = useCallback((nodeId: string) => {
+    setActiveNodeId(nodeId);
+  }, []);
+
+  // Handle keyboard navigation to move active node
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!activeNodeId || dialogState.isOpen) return;
+
+      switch (e.key) {
+        case 'j':
+        case 'J':
+        case 'ArrowDown':
+          e.preventDefault();
+          handleMove(activeNodeId, 'down');
+          break;
+        case 'k':
+        case 'K':
+        case 'ArrowUp':
+          e.preventDefault();
+          handleMove(activeNodeId, 'up');
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeNodeId, dialogState.isOpen, handleMove]);
+
+  // Handle click outside to clear active state
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (treeContainerRef.current && !treeContainerRef.current.contains(e.target as Node)) {
+        setActiveNodeId(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
   return (
     <div className="h-full flex flex-col">
       <div className="mb-4 flex gap-2">
@@ -241,17 +284,20 @@ export const TreeView: React.FC<TreeViewProps> = ({ root, nodes, onNodesChange, 
         </button>
       </div>
 
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-auto" ref={treeContainerRef}>
         {nodes.map((node) => (
           <TreeNodeComponent
             key={node.id}
             node={node}
             depth={0}
+            isActive={activeNodeId === node.id}
             onToggle={handleToggle}
             onDelete={handleDelete}
             onAdd={handleAdd}
             onRename={handleRename}
             onMove={handleMove}
+            onNodeClick={handleNodeClick}
+            activeNodeId={activeNodeId}
           />
         ))}
       </div>
