@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Background -->
+  <rect width="32" height="32" rx="4" fill="#1e1e1e"/>
+  
+  <!-- Tree structure lines -->
+  <!-- Vertical main line -->
+  <line x1="8" y1="8" x2="8" y2="24" stroke="#4ade80" stroke-width="1.5"/>
+  
+  <!-- Horizontal branches -->
+  <line x1="8" y1="12" x2="14" y2="12" stroke="#4ade80" stroke-width="1.5"/>
+  <line x1="8" y1="18" x2="14" y2="18" stroke="#4ade80" stroke-width="1.5"/>
+  <line x1="8" y1="24" x2="14" y2="24" stroke="#4ade80" stroke-width="1.5"/>
+  
+  <!-- Folder icon (top) -->
+  <rect x="15" y="10" width="10" height="7" rx="1" fill="#60a5fa" stroke="#60a5fa" stroke-width="1"/>
+  <rect x="15" y="9" width="5" height="2" rx="0.5" fill="#60a5fa"/>
+  
+  <!-- File icons -->
+  <rect x="15" y="16" width="8" height="4" rx="0.5" fill="#a78bfa" stroke="#a78bfa" stroke-width="1"/>
+  <rect x="15" y="22" width="8" height="4" rx="0.5" fill="#a78bfa" stroke="#a78bfa" stroke-width="1"/>
+  
+  <!-- Root indicator -->
+  <circle cx="8" cy="8" r="2" fill="#f59e0b"/>
+</svg>
