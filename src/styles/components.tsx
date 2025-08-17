@@ -50,6 +50,50 @@ export const DialogContent = twc.div`
   cursor-auto
 `;
 
+export const DialogHeader = twc.div`
+  flex items-center justify-between 
+  px-6 py-4 
+  border-b border-gray-200
+`;
+
+export const DialogBody = twc.div`
+  px-6 py-4
+  overflow-y-auto
+`;
+
+export const DialogTitle = twc.h2`
+  text-xl font-bold text-gray-800
+`;
+
+export const CloseButton = twc.button`
+  text-gray-500 hover:text-gray-700 
+  cursor-pointer
+  p-1
+  transition-colors
+`;
+
+export const LanguageButton = twc.button`
+  px-3 py-1 
+  text-sm text-blue-600 
+  hover:bg-blue-50 
+  rounded 
+  transition-colors 
+  cursor-pointer
+`;
+
+export const HelpDialogContent = twc.div`
+  bg-white 
+  rounded-lg 
+  shadow-xl
+  max-w-3xl 
+  w-full 
+  mx-2 md:mx-4
+  max-h-[80vh]
+  overflow-hidden
+  flex flex-col
+  cursor-auto
+`;
+
 export const Input = twc.input`
   w-full 
   px-3 py-2 

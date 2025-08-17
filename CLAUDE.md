@@ -1,7 +1,9 @@
 Project spec: @spec.md
 
 Please remember:
-- Never run `pnpm dev` or `npm run dev` directly, let the user run it by himself
+- ⚠️ NEVER EVER run `pnpm dev` or `npm run dev` directly, let the user run it by himself - THIS IS ABSOLUTELY FORBIDDEN
+- ⚠️ NEVER start development server with `npm run dev &` or any background process
+- ⚠️ USER HAS SAID THIS A MILLION TIMES - DO NOT RUN DEV SERVER EVER
 - make sure to use the correct way to use tailwindcss v4
 
 ## TODO

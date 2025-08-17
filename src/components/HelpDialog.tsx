@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
 import { helpContent } from '../data/helpContent';
+import {
+  Dialog,
+  HelpDialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogBody,
+  CloseButton,
+  LanguageButton,
+} from '../styles/components';
 
 interface HelpDialogProps {
   isOpen: boolean;
@@ -14,26 +23,23 @@ export const HelpDialog: React.FC<HelpDialogProps> = ({ isOpen, onClose }) => {
   const content = helpContent[language];
 
   return (
-    <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-xl max-w-3xl max-h-[80vh] overflow-hidden flex flex-col">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-gray-800">{language === 'en' ? 'Help' : '帮助'}</h2>
+    <Dialog onClick={onClose}>
+      <HelpDialogContent onClick={(e) => e.stopPropagation()}>
+        <DialogHeader>
+          <DialogTitle>{language === 'en' ? 'Help' : '帮助'}</DialogTitle>
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => setLanguage(language === 'en' ? 'zh' : 'en')}
-              className="px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded transition-colors cursor-pointer"
-            >
+            <LanguageButton onClick={() => setLanguage(language === 'en' ? 'zh' : 'en')}>
               {language === 'en' ? '中文' : 'English'}
-            </button>
-            <button onClick={onClose} className="text-gray-500 hover:text-gray-700 cursor-pointer" aria-label="Close">
+            </LanguageButton>
+            <CloseButton onClick={onClose} aria-label="Close">
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
-            </button>
+            </CloseButton>
           </div>
-        </div>
+        </DialogHeader>
 
-        <div className="px-6 py-4 overflow-y-auto">
+        <DialogBody>
           <div className="mb-6">
             <p className="text-gray-700 leading-relaxed">{content.purpose}</p>
           </div>
@@ -79,8 +85,8 @@ export const HelpDialog: React.FC<HelpDialogProps> = ({ isOpen, onClose }) => {
               ))}
             </ul>
           </div>
-        </div>
-      </div>
-    </div>
+        </DialogBody>
+      </HelpDialogContent>
+    </Dialog>
   );
 };
