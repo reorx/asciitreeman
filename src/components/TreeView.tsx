@@ -267,17 +267,17 @@ export const TreeView: React.FC<TreeViewProps> = ({ root, nodes, onNodesChange, 
 
   return (
     <div className="h-full flex flex-col">
-      <div className="mb-4 flex gap-2">
+      <div className="mb-2 flex gap-2">
         <Input
           type="text"
           value={root}
           onChange={(e) => onRootChange(e.target.value)}
           placeholder="Enter root directory name"
-          className="flex-1"
+          className="flex-1 font-mono text-sm py-1.5"
         />
         <button
           onClick={handleToggleAll}
-          className="px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
+          className="px-2 py-1 text-gray-600 hover:text-blue-700 hover:bg-blue-100 rounded transition-colors cursor-pointer font-mono text-sm"
           title="Expand/Collapse All"
         >
           {nodes.every((node) => checkAllExpanded(node)) ? '▼' : '▶'}

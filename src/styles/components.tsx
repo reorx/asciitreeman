@@ -12,8 +12,7 @@ export const Button = twc.button`
 
 export const IconButton = twc.button`
   p-1 
-  text-gray-600 hover:text-gray-900 
-  hover:bg-gray-100 
+  text-gray-600 
   rounded 
   transition-colors
   cursor-pointer
@@ -69,10 +68,12 @@ export const TreeNodeContainer = twc.div`
   group 
   flex items-center 
   gap-1 
-  py-1 pr-2 
-  hover:bg-gray-50 
+  py-0.5 pr-2 
+  hover:bg-gray-100 
   rounded 
   cursor-pointer
+  font-mono
+  text-sm
 `;
 
 export const TreeNodeActions = twc.div`

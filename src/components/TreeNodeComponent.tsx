@@ -39,7 +39,7 @@ export const TreeNodeComponent: React.FC<TreeNodeProps> = ({
       <TreeNodeContainer
         style={{ paddingLeft: `${depth * 20 + 8}px` }}
         onClick={handleClick}
-        className={isActive ? 'bg-blue-100 border-l-2 border-blue-500' : ''}
+        className={isActive ? 'outline outline-2 outline-blue-500 outline-offset-[-2px]' : ''}
       >
         <span className="flex items-center gap-2">
           {node.children.length > 0 && (
@@ -66,6 +66,7 @@ export const TreeNodeComponent: React.FC<TreeNodeProps> = ({
               onAdd(node.id, false);
             }}
             title="Add sibling"
+            className="hover:bg-blue-100 hover:text-blue-700"
           >
             +
           </IconButton>
@@ -76,6 +77,7 @@ export const TreeNodeComponent: React.FC<TreeNodeProps> = ({
               onAdd(node.id, true);
             }}
             title="Add child"
+            className="hover:bg-blue-100 hover:text-blue-700"
           >
             ⊕
           </IconButton>
@@ -86,6 +88,7 @@ export const TreeNodeComponent: React.FC<TreeNodeProps> = ({
               onMove(node.id, 'up');
             }}
             title="Move up"
+            className="hover:bg-blue-100 hover:text-blue-700"
           >
             ↑
           </IconButton>
@@ -96,6 +99,7 @@ export const TreeNodeComponent: React.FC<TreeNodeProps> = ({
               onMove(node.id, 'down');
             }}
             title="Move down"
+            className="hover:bg-blue-100 hover:text-blue-700"
           >
             ↓
           </IconButton>
@@ -106,6 +110,7 @@ export const TreeNodeComponent: React.FC<TreeNodeProps> = ({
               onRename(node.id);
             }}
             title="Rename"
+            className="hover:bg-blue-100 hover:text-blue-700"
           >
             r
           </IconButton>
