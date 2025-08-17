@@ -51,8 +51,8 @@ function App() {
     <div className="h-screen flex flex-col bg-gray-100">
       <Toolbar onHelpClick={() => setIsHelpOpen(true)} />
 
-      <div className="flex-1 flex gap-4 p-4 overflow-hidden">
-        <Panel>
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-1.5 md:gap-4 p-2 md:p-4 overflow-hidden md:overflow-visible">
+        <Panel className="md:h-auto overflow-auto">
           <TreeView
             root={treeData?.root || ''}
             nodes={treeData?.nodes || []}
@@ -61,7 +61,7 @@ function App() {
           />
         </Panel>
 
-        <Panel>
+        <Panel className="md:h-auto overflow-auto">
           <AsciiOutput content={asciiOutput} onParse={handleParseContent} />
         </Panel>
       </div>

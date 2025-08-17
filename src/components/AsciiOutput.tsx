@@ -61,7 +61,7 @@ export const AsciiOutput: React.FC<AsciiOutputProps> = ({ content, onParse }) =>
   };
 
   return (
-    <div className="flex flex-col h-full gap-4">
+    <div className="flex flex-col h-full gap-3 md:gap-4">
       <Textarea
         value={editableContent}
         onChange={(e) => {
@@ -70,17 +70,19 @@ export const AsciiOutput: React.FC<AsciiOutputProps> = ({ content, onParse }) =>
           // Save manually edited content to localStorage
           localStorage.setItem('asciiTreeContent', newContent);
         }}
-        className="flex-1 resize-none"
+        className="flex-1 resize-none min-h-[200px] md:min-h-0"
         placeholder="Paste tree output here and click Parse to load it..."
       />
-      <div className="flex justify-between">
-        <div className="flex gap-2">
-          <Button onClick={handleParse} disabled={!editableContent.trim()}>
+      <div className="flex gap-1.5 md:gap-2 justify-between">
+        <div className="flex gap-1.5 md:gap-2 flex-1 min-w-0">
+          <Button onClick={handleParse} disabled={!editableContent.trim()} className="flex-1 min-w-0">
             Parse
           </Button>
-          <Button onClick={handleLoadExample}>Load example</Button>
+          <Button onClick={handleLoadExample} className="flex-1 min-w-0 text-xs md:text-sm">
+            Load example
+          </Button>
         </div>
-        <Button onClick={handleCopy} className="relative">
+        <Button onClick={handleCopy} className="relative flex-shrink-0">
           {showCopied ? 'Copied!' : 'Copy'}
         </Button>
       </div>
