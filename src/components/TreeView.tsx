@@ -129,65 +129,63 @@ export const TreeView: React.FC<TreeViewProps> = ({ nodes, onNodesChange }) => {
         isExpanded: true,
       };
 
-      updateNodes((nodes) => {
-        const addNode = (nodes: TreeNode[]): TreeNode[] => {
-          if (!isChild) {
-            const index = nodes.findIndex((n) => n.id === nodeId);
-            if (index !== -1) {
-              const newNodes = [...nodes];
-              newNodes.splice(index + 1, 0, newNode);
-              return newNodes;
-            }
+      const addNode = (nodeList: TreeNode[]): TreeNode[] => {
+        if (!isChild) {
+          const index = nodeList.findIndex((n) => n.id === nodeId);
+          if (index !== -1) {
+            const newNodes = [...nodeList];
+            newNodes.splice(index + 1, 0, newNode);
+            return newNodes;
           }
-
-          return nodes.map((node) => {
-            if (node.id === nodeId && isChild) {
-              return {
-                ...node,
-                children: [...node.children, newNode],
-                isExpanded: true,
-              };
-            } else if (node.children.length > 0) {
-              return {
-                ...node,
-                children: addNode(node.children),
-              };
-            }
-            return node;
-          });
-        };
-
-        if (!isChild && !nodes.find((n) => n.id === nodeId)) {
-          const result = addNode(nodes);
-          if (result === nodes) {
-            return [...nodes, newNode];
-          }
-          return result;
         }
 
-        return addNode(nodes);
-      });
+        return nodeList.map((node) => {
+          if (node.id === nodeId && isChild) {
+            return {
+              ...node,
+              children: [...node.children, newNode],
+              isExpanded: true,
+            };
+          } else if (node.children.length > 0) {
+            return {
+              ...node,
+              children: addNode(node.children),
+            };
+          }
+          return node;
+        });
+      };
+
+      const currentNodes = [...nodes];
+      if (!isChild && !currentNodes.find((n) => n.id === nodeId)) {
+        const result = addNode(currentNodes);
+        if (result === currentNodes) {
+          onNodesChange([...currentNodes, newNode]);
+        } else {
+          onNodesChange(result);
+        }
+      } else {
+        onNodesChange(addNode(currentNodes));
+      }
     } else if (action === 'rename' && nodeId) {
-      updateNodes((nodes) => {
-        const renameNode = (nodes: TreeNode[]): TreeNode[] => {
-          return nodes.map((node) => {
-            if (node.id === nodeId) {
-              return {
-                ...node,
-                name: value,
-                type: value.includes('.') ? 'file' : node.type,
-              };
-            } else if (node.children.length > 0) {
-              return {
-                ...node,
-                children: renameNode(node.children),
-              };
-            }
-            return node;
-          });
-        };
-        return renameNode(nodes);
-      });
+      const renameNode = (nodeList: TreeNode[]): TreeNode[] => {
+        return nodeList.map((node) => {
+          if (node.id === nodeId) {
+            return {
+              ...node,
+              name: value,
+              type: value.includes('.') ? 'file' : node.type,
+            };
+          } else if (node.children.length > 0) {
+            return {
+              ...node,
+              children: renameNode(node.children),
+            };
+          }
+          return node;
+        });
+      };
+      onNodesChange(renameNode([...nodes]));
     }
 
     setDialogState({
