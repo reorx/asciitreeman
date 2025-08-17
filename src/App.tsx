@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TreeNode, TreeData } from './types/tree';
 import { Toolbar } from './components/Toolbar';
 import { TreeView } from './components/TreeView';
@@ -8,7 +8,19 @@ import { parseTreeOutput } from './utils/treeParser';
 import { generateTreeOutput } from './utils/treeGenerator';
 
 function App() {
-  const [treeData, setTreeData] = useState<TreeData>({ root: '.', nodes: [] });
+  const [treeData, setTreeData] = useState<TreeData>(() => {
+    // Load from localStorage on initial mount
+    const savedContent = localStorage.getItem('asciiTreeContent');
+    if (savedContent) {
+      try {
+        return parseTreeOutput(savedContent);
+      } catch (error) {
+        console.error('Failed to parse saved content:', error);
+      }
+    }
+    // Return empty tree if no saved content
+    return { root: '.', nodes: [] };
+  });
 
   const handleParseContent = (content: string) => {
     const parsedData = parseTreeOutput(content);

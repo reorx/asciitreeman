@@ -31,7 +31,9 @@ export const TreeNodeComponent: React.FC<TreeNodeProps> = ({
     <>
       <TreeNodeContainer style={{ paddingLeft: `${depth * 20 + 8}px` }} onClick={handleClick}>
         <span className="flex items-center gap-2">
-          {node.children.length > 0 && <span className="text-gray-500">{node.isExpanded ? '▼' : '▶'}</span>}
+          {node.children.length > 0 && (
+            <span className="text-gray-500 inline-block w-3 text-center">{node.isExpanded ? '▼' : '▶'}</span>
+          )}
           <span className={node.type === 'directory' ? 'font-medium' : ''}>{node.name}</span>
         </span>
 
