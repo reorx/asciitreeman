@@ -1,8 +1,10 @@
 import { TreeNode, TreeData } from '../types/tree';
 
-export function parseTreeOutput(input: string): TreeData {
-  const lines = input.trim().split('\n');
-  if (lines.length === 0) return { root: '.', nodes: [] };
+export function parseTreeOutput(input: string): TreeData | null {
+  const trimmedInput = input.trim();
+  if (!trimmedInput) return null;
+
+  const lines = trimmedInput.split('\n');
 
   // Preprocess: remove non-tree content after empty lines
   const processedLines: string[] = [];

@@ -8,7 +8,7 @@ import { parseTreeOutput } from './utils/treeParser';
 import { generateTreeOutput } from './utils/treeGenerator';
 
 function App() {
-  const [treeData, setTreeData] = useState<TreeData>(() => {
+  const [treeData, setTreeData] = useState<TreeData | null>(() => {
     // Load from localStorage on initial mount
     const savedContent = localStorage.getItem('asciiTreeContent');
     if (savedContent) {
@@ -18,8 +18,8 @@ function App() {
         console.error('Failed to parse saved content:', error);
       }
     }
-    // Return empty tree if no saved content
-    return { root: '.', nodes: [] };
+    // Return null if no saved content
+    return null;
   });
 
   const handleParseContent = (content: string) => {
@@ -28,14 +28,22 @@ function App() {
   };
 
   const handleNodesChange = (nodes: TreeNode[]) => {
-    setTreeData({ ...treeData, nodes });
+    if (treeData) {
+      setTreeData({ ...treeData, nodes });
+    } else {
+      setTreeData({ root: '', nodes });
+    }
   };
 
   const handleRootChange = (root: string) => {
-    setTreeData({ ...treeData, root });
+    if (treeData) {
+      setTreeData({ ...treeData, root });
+    } else {
+      setTreeData({ root, nodes: [] });
+    }
   };
 
-  const asciiOutput = generateTreeOutput(treeData);
+  const asciiOutput = treeData ? generateTreeOutput(treeData) : '';
 
   return (
     <div className="h-screen flex flex-col bg-gray-100">
@@ -44,8 +52,8 @@ function App() {
       <div className="flex-1 flex gap-4 p-4 overflow-hidden">
         <Panel>
           <TreeView
-            root={treeData.root}
-            nodes={treeData.nodes}
+            root={treeData?.root || ''}
+            nodes={treeData?.nodes || []}
             onNodesChange={handleNodesChange}
             onRootChange={handleRootChange}
           />

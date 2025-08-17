@@ -2,10 +2,14 @@ import { parseTreeOutput } from './treeParser';
 import { TreeNode } from '../types/tree';
 
 describe('parseTreeOutput', () => {
-  it('should parse an empty input', () => {
+  it('should return null for empty input', () => {
     const result = parseTreeOutput('');
-    expect(result.root).toBe('.');
-    expect(result.nodes).toEqual([]);
+    expect(result).toBeNull();
+  });
+
+  it('should return null for whitespace-only input', () => {
+    const result = parseTreeOutput('   \n  \t  ');
+    expect(result).toBeNull();
   });
 
   it('should parse a single file', () => {
