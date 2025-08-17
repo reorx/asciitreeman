@@ -205,16 +205,40 @@ export const TreeView: React.FC<TreeViewProps> = ({ root, nodes, onNodesChange, 
     return node?.name || '';
   };
 
+  const handleToggleAll = () => {
+    const allExpanded = nodes.every((node) => checkAllExpanded(node));
+    const toggleAll = (nodeList: TreeNode[]): TreeNode[] => {
+      return nodeList.map((node) => ({
+        ...node,
+        isExpanded: !allExpanded,
+        children: toggleAll(node.children),
+      }));
+    };
+    onNodesChange(toggleAll([...nodes]));
+  };
+
+  const checkAllExpanded = (node: TreeNode): boolean => {
+    if (node.children.length === 0) return true;
+    return node.isExpanded && node.children.every(checkAllExpanded);
+  };
+
   return (
     <div className="h-full flex flex-col">
-      <div className="mb-4">
-        <label className="block text-sm font-medium text-gray-700 mb-1">Root Directory</label>
+      <div className="mb-4 flex gap-2">
         <Input
           type="text"
           value={root}
           onChange={(e) => onRootChange(e.target.value)}
           placeholder="Enter root directory name"
+          className="flex-1"
         />
+        <button
+          onClick={handleToggleAll}
+          className="px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+          title="Expand/Collapse All"
+        >
+          {nodes.every((node) => checkAllExpanded(node)) ? '▼' : '▶'}
+        </button>
       </div>
 
       <div className="flex-1 overflow-auto">
