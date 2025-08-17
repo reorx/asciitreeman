@@ -3,11 +3,13 @@ import { TreeNode, TreeData } from './types/tree';
 import { Toolbar } from './components/Toolbar';
 import { TreeView } from './components/TreeView';
 import { AsciiOutput } from './components/AsciiOutput';
+import { HelpDialog } from './components/HelpDialog';
 import { Panel } from './styles/components';
 import { parseTreeOutput } from './utils/treeParser';
 import { generateTreeOutput } from './utils/treeGenerator';
 
 function App() {
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [treeData, setTreeData] = useState<TreeData | null>(() => {
     // Load from localStorage on initial mount
     const savedContent = localStorage.getItem('asciiTreeContent');
@@ -47,7 +49,7 @@ function App() {
 
   return (
     <div className="h-screen flex flex-col bg-gray-100">
-      <Toolbar />
+      <Toolbar onHelpClick={() => setIsHelpOpen(true)} />
 
       <div className="flex-1 flex gap-4 p-4 overflow-hidden">
         <Panel>
@@ -63,6 +65,8 @@ function App() {
           <AsciiOutput content={asciiOutput} onParse={handleParseContent} />
         </Panel>
       </div>
+
+      <HelpDialog isOpen={isHelpOpen} onClose={() => setIsHelpOpen(false)} />
     </div>
   );
 }
