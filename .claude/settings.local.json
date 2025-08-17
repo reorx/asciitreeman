@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mv:*)",
+      "Bash(rm:*)",
+      "Bash(npx tailwindcss init:*)",
+      "Bash(sed:*)"
+    ],
+    "deny": []
+  }
+}
