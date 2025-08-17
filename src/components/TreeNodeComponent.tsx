@@ -22,7 +22,7 @@ export const TreeNodeComponent: React.FC<TreeNodeProps> = ({
   onMove,
 }) => {
   const handleClick = () => {
-    if (node.type === 'directory') {
+    if (node.children.length > 0) {
       onToggle(node.id);
     }
   };
@@ -31,7 +31,7 @@ export const TreeNodeComponent: React.FC<TreeNodeProps> = ({
     <>
       <TreeNodeContainer style={{ paddingLeft: `${depth * 20}px` }} onClick={handleClick}>
         <span className="flex items-center gap-2">
-          {node.type === 'directory' && <span className="text-gray-500">{node.isExpanded ? '▼' : '▶'}</span>}
+          {node.children.length > 0 && <span className="text-gray-500">{node.isExpanded ? '▼' : '▶'}</span>}
           <span className={node.type === 'directory' ? 'font-medium' : ''}>{node.name}</span>
         </span>
 
@@ -57,17 +57,15 @@ export const TreeNodeComponent: React.FC<TreeNodeProps> = ({
             +
           </IconButton>
 
-          {node.type === 'directory' && (
-            <IconButton
-              onClick={(e) => {
-                e.stopPropagation();
-                onAdd(node.id, true);
-              }}
-              title="Add child"
-            >
-              ⊕
-            </IconButton>
-          )}
+          <IconButton
+            onClick={(e) => {
+              e.stopPropagation();
+              onAdd(node.id, true);
+            }}
+            title="Add child"
+          >
+            ⊕
+          </IconButton>
 
           <IconButton
             onClick={(e) => {
@@ -101,7 +99,7 @@ export const TreeNodeComponent: React.FC<TreeNodeProps> = ({
         </TreeNodeActions>
       </TreeNodeContainer>
 
-      {node.type === 'directory' &&
+      {node.children.length > 0 &&
         node.isExpanded &&
         node.children.map((child) => (
           <TreeNodeComponent

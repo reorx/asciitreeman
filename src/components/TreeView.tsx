@@ -146,6 +146,7 @@ export const TreeView: React.FC<TreeViewProps> = ({ root, nodes, onNodesChange, 
           if (node.id === nodeId && isChild) {
             return {
               ...node,
+              type: 'directory', // Auto-convert to directory when adding children
               children: [...node.children, newNode],
               isExpanded: true,
             };

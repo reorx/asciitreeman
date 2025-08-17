@@ -81,31 +81,21 @@ function extractName(line: string): string {
 }
 
 function detectIfDirectory(lines: string[], currentIndex: number, currentDepth: number): boolean {
-  const line = lines[currentIndex];
-  const name = extractName(line);
+  // Simple check: if it has children, it's a directory
+  if (currentIndex === lines.length - 1) return false;
 
-  // Check if name has a file extension (contains a dot after the first character)
-  const hasExtension = name.includes('.') && name.indexOf('.') > 0;
+  for (let i = currentIndex + 1; i < lines.length; i++) {
+    const nextLine = lines[i];
+    if (nextLine.trim() === '') continue;
 
-  // If it has a typical file extension, it's likely a file
-  if (hasExtension) {
-    // But still check if it has children (could be a directory with dots in name)
-    for (let i = currentIndex + 1; i < lines.length; i++) {
-      const nextLine = lines[i];
-      if (nextLine.trim() === '') continue;
+    const nextDepth = getDepth(nextLine);
 
-      const nextDepth = getDepth(nextLine);
-
-      if (nextDepth > currentDepth) {
-        return true; // Has children, so it's a directory
-      } else if (nextDepth <= currentDepth) {
-        return false; // No children and has extension, so it's a file
-      }
+    if (nextDepth > currentDepth) {
+      return true; // Has children, so it's a directory
+    } else if (nextDepth <= currentDepth) {
+      return false; // No children, so it's a file
     }
-    return false; // Has extension and no children
   }
 
-  // No extension, assume it's a directory unless proven otherwise
-  // This handles empty directories correctly
-  return true;
+  return false; // Default to file if no children
 }
