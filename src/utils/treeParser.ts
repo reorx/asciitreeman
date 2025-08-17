@@ -1,20 +1,33 @@
-import { TreeNode } from '../types/tree';
+import { TreeNode, TreeData } from '../types/tree';
 
-export function parseTreeOutput(input: string): TreeNode[] {
+export function parseTreeOutput(input: string): TreeData {
   const lines = input.trim().split('\n');
-  if (lines.length === 0) return [];
+  if (lines.length === 0) return { root: '.', nodes: [] };
 
-  const root: TreeNode[] = [];
+  // Extract root directory from first line
+  let rootName = '.';
+  let startIndex = 0;
+
+  if (lines.length > 0) {
+    const firstLine = lines[0].trim();
+    // Check if first line is a root directory (no tree symbols)
+    if (!firstLine.includes('├') && !firstLine.includes('└') && !firstLine.includes('│')) {
+      rootName = firstLine;
+      startIndex = 1;
+    }
+  }
+
+  const nodes: TreeNode[] = [];
   const stack: { node: TreeNode; depth: number }[] = [];
   let idCounter = 0;
 
-  for (const line of lines) {
-    if (line.trim() === '' || line.trim() === '.') continue;
+  for (let i = startIndex; i < lines.length; i++) {
+    const line = lines[i];
+    if (line.trim() === '') continue;
 
     const depth = getDepth(line);
     const name = extractName(line);
-    const isDirectory =
-      !line.includes('└──') && !line.includes('├──') ? false : detectIfDirectory(lines, lines.indexOf(line), depth);
+    const isDirectory = detectIfDirectory(lines, i, depth);
 
     const node: TreeNode = {
       id: `node-${idCounter++}`,
@@ -30,7 +43,7 @@ export function parseTreeOutput(input: string): TreeNode[] {
     }
 
     if (stack.length === 0) {
-      root.push(node);
+      nodes.push(node);
     } else {
       const parent = stack[stack.length - 1].node;
       node.parentId = parent.id;
@@ -42,7 +55,7 @@ export function parseTreeOutput(input: string): TreeNode[] {
     }
   }
 
-  return root;
+  return { root: rootName, nodes };
 }
 
 function getDepth(line: string): number {
@@ -68,20 +81,31 @@ function extractName(line: string): string {
 }
 
 function detectIfDirectory(lines: string[], currentIndex: number, currentDepth: number): boolean {
-  if (currentIndex === lines.length - 1) return false;
+  const line = lines[currentIndex];
+  const name = extractName(line);
 
-  for (let i = currentIndex + 1; i < lines.length; i++) {
-    const nextLine = lines[i];
-    if (nextLine.trim() === '') continue;
+  // Check if name has a file extension (contains a dot after the first character)
+  const hasExtension = name.includes('.') && name.indexOf('.') > 0;
 
-    const nextDepth = getDepth(nextLine);
+  // If it has a typical file extension, it's likely a file
+  if (hasExtension) {
+    // But still check if it has children (could be a directory with dots in name)
+    for (let i = currentIndex + 1; i < lines.length; i++) {
+      const nextLine = lines[i];
+      if (nextLine.trim() === '') continue;
 
-    if (nextDepth > currentDepth) {
-      return true;
-    } else if (nextDepth <= currentDepth) {
-      return false;
+      const nextDepth = getDepth(nextLine);
+
+      if (nextDepth > currentDepth) {
+        return true; // Has children, so it's a directory
+      } else if (nextDepth <= currentDepth) {
+        return false; // No children and has extension, so it's a file
+      }
     }
+    return false; // Has extension and no children
   }
 
-  return false;
+  // No extension, assume it's a directory unless proven otherwise
+  // This handles empty directories correctly
+  return true;
 }

@@ -1,11 +1,6 @@
 import React from 'react';
-import { Button } from '../styles/components';
 
-interface ToolbarProps {
-  onLoadClick: () => void;
-}
-
-export const Toolbar: React.FC<ToolbarProps> = ({ onLoadClick }) => {
+export const Toolbar: React.FC = () => {
   return (
     <div className="flex items-center gap-4 px-4 py-3 bg-gray-50 border-b border-gray-200">
       <div className="flex items-center gap-2">
@@ -27,8 +22,6 @@ export const Toolbar: React.FC<ToolbarProps> = ({ onLoadClick }) => {
         </svg>
         <h1 className="text-xl font-bold text-gray-800">ASCII Tree Editor</h1>
       </div>
-
-      <Button onClick={onLoadClick}>Load Output</Button>
     </div>
   );
 };

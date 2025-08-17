@@ -9,6 +9,11 @@ export type TreeNode = {
   isExpanded?: boolean;
 };
 
+export type TreeData = {
+  root: string;
+  nodes: TreeNode[];
+};
+
 export type TreeAction = {
   type: 'add' | 'delete' | 'rename' | 'move' | 'addChild' | 'toggle';
   nodeId: string;

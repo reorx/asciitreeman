@@ -2,13 +2,16 @@ import React, { useState, useCallback } from 'react';
 import { TreeNode } from '../types/tree';
 import { TreeNodeComponent } from './TreeNodeComponent';
 import { InputDialog } from './InputDialog';
+import { Input } from '../styles/components';
 
 interface TreeViewProps {
+  root: string;
   nodes: TreeNode[];
   onNodesChange: (nodes: TreeNode[]) => void;
+  onRootChange: (root: string) => void;
 }
 
-export const TreeView: React.FC<TreeViewProps> = ({ nodes, onNodesChange }) => {
+export const TreeView: React.FC<TreeViewProps> = ({ root, nodes, onNodesChange, onRootChange }) => {
   const [dialogState, setDialogState] = useState<{
     isOpen: boolean;
     action: 'add' | 'rename' | null;
@@ -202,19 +205,31 @@ export const TreeView: React.FC<TreeViewProps> = ({ nodes, onNodesChange }) => {
   };
 
   return (
-    <div className="h-full overflow-auto">
-      {nodes.map((node) => (
-        <TreeNodeComponent
-          key={node.id}
-          node={node}
-          depth={0}
-          onToggle={handleToggle}
-          onDelete={handleDelete}
-          onAdd={handleAdd}
-          onRename={handleRename}
-          onMove={handleMove}
+    <div className="h-full flex flex-col">
+      <div className="mb-4">
+        <label className="block text-sm font-medium text-gray-700 mb-1">Root Directory</label>
+        <Input
+          type="text"
+          value={root}
+          onChange={(e) => onRootChange(e.target.value)}
+          placeholder="Enter root directory name"
         />
-      ))}
+      </div>
+
+      <div className="flex-1 overflow-auto">
+        {nodes.map((node) => (
+          <TreeNodeComponent
+            key={node.id}
+            node={node}
+            depth={0}
+            onToggle={handleToggle}
+            onDelete={handleDelete}
+            onAdd={handleAdd}
+            onRename={handleRename}
+            onMove={handleMove}
+          />
+        ))}
+      </div>
 
       <InputDialog
         isOpen={dialogState.isOpen}

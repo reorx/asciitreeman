@@ -1,43 +1,48 @@
 import React, { useState } from 'react';
-import { TreeNode } from './types/tree';
+import { TreeNode, TreeData } from './types/tree';
 import { Toolbar } from './components/Toolbar';
 import { TreeView } from './components/TreeView';
 import { AsciiOutput } from './components/AsciiOutput';
-import { LoadDialog } from './components/LoadDialog';
 import { Panel } from './styles/components';
 import { parseTreeOutput } from './utils/treeParser';
 import { generateTreeOutput } from './utils/treeGenerator';
 
 function App() {
-  const [treeNodes, setTreeNodes] = useState<TreeNode[]>([]);
-  const [isLoadDialogOpen, setIsLoadDialogOpen] = useState(false);
+  const [treeData, setTreeData] = useState<TreeData>({ root: '.', nodes: [] });
 
-  const handleLoadContent = (content: string) => {
-    const parsedNodes = parseTreeOutput(content);
-    setTreeNodes(parsedNodes);
+  const handleParseContent = (content: string) => {
+    const parsedData = parseTreeOutput(content);
+    setTreeData(parsedData);
   };
 
   const handleNodesChange = (nodes: TreeNode[]) => {
-    setTreeNodes(nodes);
+    setTreeData({ ...treeData, nodes });
   };
 
-  const asciiOutput = generateTreeOutput(treeNodes);
+  const handleRootChange = (root: string) => {
+    setTreeData({ ...treeData, root });
+  };
+
+  const asciiOutput = generateTreeOutput(treeData);
 
   return (
     <div className="h-screen flex flex-col bg-gray-100">
-      <Toolbar onLoadClick={() => setIsLoadDialogOpen(true)} />
+      <Toolbar />
 
       <div className="flex-1 flex gap-4 p-4 overflow-hidden">
         <Panel>
-          <TreeView nodes={treeNodes} onNodesChange={handleNodesChange} />
+          <TreeView
+            root={treeData.root}
+            nodes={treeData.nodes}
+            onNodesChange={handleNodesChange}
+            onRootChange={handleRootChange}
+          />
         </Panel>
 
         <Panel>
-          <AsciiOutput content={asciiOutput} />
+          <AsciiOutput content={asciiOutput} onParse={handleParseContent} />
         </Panel>
       </div>
-
-      <LoadDialog isOpen={isLoadDialogOpen} onLoad={handleLoadContent} onClose={() => setIsLoadDialogOpen(false)} />
     </div>
   );
 }

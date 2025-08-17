@@ -1,9 +1,11 @@
-import { TreeNode } from '../types/tree';
+import { TreeNode, TreeData } from '../types/tree';
 
-export function generateTreeOutput(nodes: TreeNode[]): string {
-  if (nodes.length === 0) return '';
+export function generateTreeOutput(treeData: TreeData): string {
+  const { root, nodes } = treeData;
 
-  const lines: string[] = ['.'];
+  if (nodes.length === 0) return root || '.';
+
+  const lines: string[] = [root || '.'];
 
   nodes.forEach((node, index) => {
     const isLast = index === nodes.length - 1;
