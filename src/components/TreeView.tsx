@@ -277,7 +277,7 @@ export const TreeView: React.FC<TreeViewProps> = ({ root, nodes, onNodesChange, 
         />
         <button
           onClick={handleToggleAll}
-          className="px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+          className="px-3 py-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
           title="Expand/Collapse All"
         >
           {nodes.every((node) => checkAllExpanded(node)) ? '▼' : '▶'}

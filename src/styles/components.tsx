@@ -6,6 +6,7 @@ export const Button = twc.button`
   text-white font-medium 
   rounded-lg 
   transition-colors
+  cursor-pointer
   disabled:opacity-50 disabled:cursor-not-allowed
 `;
 
@@ -15,6 +16,7 @@ export const IconButton = twc.button`
   hover:bg-gray-100 
   rounded 
   transition-colors
+  cursor-pointer
 `;
 
 export const Panel = twc.div`
@@ -31,6 +33,7 @@ export const Dialog = twc.div`
   flex items-center justify-center 
   bg-black bg-opacity-50 
   z-50
+  cursor-pointer
 `;
 
 export const DialogContent = twc.div`
@@ -42,6 +45,7 @@ export const DialogContent = twc.div`
   mx-4
   max-h-[80vh]
   overflow-auto
+  cursor-auto
 `;
 
 export const Input = twc.input`
