@@ -65,7 +65,7 @@ export const TreeNodeContainer = twc.div`
   group 
   flex items-center 
   gap-1 
-  py-1 px-2 
+  py-1 pr-2 
   hover:bg-gray-50 
   rounded 
   cursor-pointer

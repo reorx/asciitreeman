@@ -4,7 +4,7 @@ import { TreeNode } from '../types/tree';
 describe('parseTreeOutput', () => {
   it('should parse an empty input', () => {
     const result = parseTreeOutput('');
-    expect(result).toEqual({ root: '.', nodes: [] });
+    expect(result).toEqual({ root: '', nodes: [] });
   });
 
   it('should parse a single file', () => {
@@ -176,10 +176,9 @@ describe('parseTreeOutput', () => {
 └── tsconfig.json`;
     
     const result = parseTreeOutput(input);
-    console.log('Parsed structure:', JSON.stringify(result, null, 2));
     
     // Should have public and src as top-level directories
-    expect(result.nodes).toHaveLength(11); // 2 directories + 9 files
+    expect(result.nodes).toHaveLength(9); // 2 directories + 7 files
     
     const publicNode = result.nodes.find(n => n.name === 'public');
     const srcNode = result.nodes.find(n => n.name === 'src');
@@ -191,6 +190,8 @@ describe('parseTreeOutput', () => {
     
     // Public should have 5 files as children
     expect(publicNode!.children).toHaveLength(5);
+    expect(publicNode!.children[0].name).toBe('file.svg');
+    expect(publicNode!.children[1].name).toBe('globe.svg');
     
     // Src should have 1 directory (app) as child
     expect(srcNode!.children).toHaveLength(1);
@@ -199,5 +200,63 @@ describe('parseTreeOutput', () => {
     
     // App should have 4 files as children
     expect(srcNode!.children[0].children).toHaveLength(4);
+    expect(srcNode!.children[0].children[0].name).toBe('favicon.ico');
+    
+    // Test that top-level nodes don't include the children
+    const topLevelNames = result.nodes.map(n => n.name);
+    expect(topLevelNames).not.toContain('file.svg');
+    expect(topLevelNames).not.toContain('app');
+    expect(topLevelNames).not.toContain('favicon.ico');
+  });
+
+  it('should correctly parse and generate the reported tree structure', () => {
+    const input = `next-test
+├── public
+│   ├── file.svg
+│   ├── globe.svg
+│   ├── next.svg
+│   ├── vercel.svg
+│   └── window.svg
+├── src
+│   └── app
+│       ├── favicon.ico
+│       ├── globals.css
+│       ├── layout.tsx
+│       └── page.tsx
+├── next-env.d.ts
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── postcss.config.mjs
+├── README.md
+└── tsconfig.json`;
+
+    // Parse the input
+    const parsedData = parseTreeOutput(input);
+    
+    // Verify correct structure
+    expect(parsedData.root).toBe('next-test');
+    expect(parsedData.nodes).toHaveLength(9);
+    
+    // Verify public directory structure
+    const publicNode = parsedData.nodes.find(n => n.name === 'public')!;
+    expect(publicNode.type).toBe('directory');
+    expect(publicNode.children).toHaveLength(5);
+    expect(publicNode.children.map(c => c.name)).toEqual([
+      'file.svg', 'globe.svg', 'next.svg', 'vercel.svg', 'window.svg'
+    ]);
+    
+    // Verify src directory structure
+    const srcNode = parsedData.nodes.find(n => n.name === 'src')!;
+    expect(srcNode.type).toBe('directory');
+    expect(srcNode.children).toHaveLength(1);
+    
+    const appNode = srcNode.children[0];
+    expect(appNode.name).toBe('app');
+    expect(appNode.type).toBe('directory');
+    expect(appNode.children).toHaveLength(4);
+    expect(appNode.children.map(c => c.name)).toEqual([
+      'favicon.ico', 'globals.css', 'layout.tsx', 'page.tsx'
+    ]);
   });
 });
