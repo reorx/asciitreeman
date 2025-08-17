@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Textarea, Button } from '../styles/components';
 import { copyToClipboard } from '../utils/clipboard';
 
-const EXAMPLE_TREE_CONTENT = `next-test
+const EXAMPLE_TREE_CONTENT = `next-app
 ├── public
 │   ├── file.svg
 │   ├── globe.svg
