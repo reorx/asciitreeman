@@ -1,10 +1,11 @@
 import { generateTreeOutput } from './treeGenerator';
-import { TreeNode } from '../types/tree';
+import { TreeNode, TreeData } from '../types/tree';
 
 describe('generateTreeOutput', () => {
   it('should generate empty output for empty nodes', () => {
-    const result = generateTreeOutput([]);
-    expect(result).toBe('');
+    const treeData: TreeData = { root: '.', nodes: [] };
+    const result = generateTreeOutput(treeData);
+    expect(result).toBe('.');
   });
 
   it('should generate output for a single file', () => {
@@ -17,7 +18,8 @@ describe('generateTreeOutput', () => {
         parentId: null,
       },
     ];
-    const result = generateTreeOutput(nodes);
+    const treeData: TreeData = { root: '.', nodes };
+    const result = generateTreeOutput(treeData);
     expect(result).toBe('.\n└── file.txt');
   });
 
@@ -46,7 +48,8 @@ describe('generateTreeOutput', () => {
         parentId: null,
       },
     ];
-    const result = generateTreeOutput(nodes);
+    const treeData: TreeData = { root: '.', nodes };
+    const result = generateTreeOutput(treeData);
     const expected = `.
 └── folder
     ├── file1.txt
@@ -78,7 +81,8 @@ describe('generateTreeOutput', () => {
         parentId: null,
       },
     ];
-    const result = generateTreeOutput(nodes);
+    const treeData: TreeData = { root: '.', nodes };
+    const result = generateTreeOutput(treeData);
     const expected = `.
 ├── folder1
 ├── folder2
@@ -134,7 +138,8 @@ describe('generateTreeOutput', () => {
         parentId: null,
       },
     ];
-    const result = generateTreeOutput(nodes);
+    const treeData: TreeData = { root: '.', nodes };
+    const result = generateTreeOutput(treeData);
     const expected = `.
 ├── folder1
 │   ├── subfolder
@@ -155,7 +160,8 @@ describe('generateTreeOutput', () => {
         parentId: null,
       },
     ];
-    const result = generateTreeOutput(nodes);
+    const treeData: TreeData = { root: '.', nodes };
+    const result = generateTreeOutput(treeData);
     expect(result).toBe('.\n└── empty_folder');
   });
 
@@ -191,7 +197,8 @@ describe('generateTreeOutput', () => {
         parentId: null,
       },
     ];
-    const result = generateTreeOutput(nodes);
+    const treeData: TreeData = { root: '.', nodes };
+    const result = generateTreeOutput(treeData);
     const lines = result.split('\n');
 
     expect(lines[0]).toBe('.');
@@ -235,7 +242,8 @@ describe('generateTreeOutput', () => {
         parentId: null,
       },
     ];
-    const result = generateTreeOutput(nodes);
+    const treeData: TreeData = { root: '.', nodes };
+    const result = generateTreeOutput(treeData);
     const lines = result.split('\n');
 
     expect(lines[1]).not.toContain('│');

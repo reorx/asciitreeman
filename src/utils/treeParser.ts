@@ -4,12 +4,37 @@ export function parseTreeOutput(input: string): TreeData {
   const lines = input.trim().split('\n');
   if (lines.length === 0) return { root: '.', nodes: [] };
 
+  // Preprocess: remove non-tree content after empty lines
+  const processedLines: string[] = [];
+  let foundEmptyLine = false;
+
+  for (const line of lines) {
+    if (line.trim() === '') {
+      foundEmptyLine = true;
+      continue;
+    }
+
+    // If we found an empty line and this line doesn't contain tree symbols, stop processing
+    if (foundEmptyLine && !line.includes('├') && !line.includes('└') && !line.includes('│')) {
+      break;
+    }
+
+    // Reset the flag if we find a valid tree line after empty line
+    if (foundEmptyLine && (line.includes('├') || line.includes('└') || line.includes('│'))) {
+      foundEmptyLine = false;
+    }
+
+    processedLines.push(line);
+  }
+
+  if (processedLines.length === 0) return { root: '.', nodes: [] };
+
   // Extract root directory from first line
   let rootName = '.';
   let startIndex = 0;
 
-  if (lines.length > 0) {
-    const firstLine = lines[0].trim();
+  if (processedLines.length > 0) {
+    const firstLine = processedLines[0].trim();
     // Check if first line is a root directory (no tree symbols)
     if (!firstLine.includes('├') && !firstLine.includes('└') && !firstLine.includes('│')) {
       rootName = firstLine;
@@ -21,13 +46,13 @@ export function parseTreeOutput(input: string): TreeData {
   const stack: { node: TreeNode; depth: number }[] = [];
   let idCounter = 0;
 
-  for (let i = startIndex; i < lines.length; i++) {
-    const line = lines[i];
+  for (let i = startIndex; i < processedLines.length; i++) {
+    const line = processedLines[i];
     if (line.trim() === '') continue;
 
     const depth = getDepth(line);
     const name = extractName(line);
-    const isDirectory = detectIfDirectory(lines, i, depth);
+    const isDirectory = detectIfDirectory(processedLines, i, depth);
 
     const node: TreeNode = {
       id: `node-${idCounter++}`,
