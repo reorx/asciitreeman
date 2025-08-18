@@ -1,4 +1,7 @@
-import { TreeNode, TreeData } from '../types/tree';
+import {
+  TreeData,
+  TreeNode,
+} from '../types/tree';
 
 export function parseTreeOutput(input: string): TreeData | null {
   const trimmedInput = input.trim();
@@ -88,9 +91,11 @@ export function parseTreeOutput(input: string): TreeData | null {
 function getDepth(line: string): number {
   let depth = 0;
   for (let i = 0; i < line.length; i++) {
-    if (line[i] === '│' || line[i] === ' ' || line[i] === '\t') {
+    const char = line[i];
+    // Match any whitespace character (including irregular ones) or tree drawing characters
+    if (char === '│' || /\s/.test(char)) {
       depth++;
-    } else if (line[i] === '├' || line[i] === '└') {
+    } else if (char === '├' || char === '└') {
       break;
     }
   }
@@ -98,12 +103,14 @@ function getDepth(line: string): number {
 }
 
 function extractName(line: string): string {
+  // Updated regex to handle any whitespace characters including irregular ones
   const match = line.match(/[├└]──\s*(.+?)(?:\s*->.*)?$/);
   if (match) {
     return match[1].trim();
   }
 
-  const cleanLine = line.replace(/^[│├└─\s]+/, '').trim();
+  // Use Unicode-aware regex to match any whitespace character
+  const cleanLine = line.replace(/^[│├└─\s]+/u, '').trim();
   return cleanLine || 'unnamed';
 }
 

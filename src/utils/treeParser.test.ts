@@ -1,5 +1,8 @@
+import {
+  TreeData,
+  TreeNode,
+} from '../types/tree';
 import { parseTreeOutput } from './treeParser';
-import { TreeNode } from '../types/tree';
 
 describe('parseTreeOutput', () => {
   it('should return null for empty input', () => {
@@ -17,7 +20,7 @@ describe('parseTreeOutput', () => {
 .
 └── file.txt
 `;
-    const result = parseTreeOutput(input);
+    const result = parseTreeOutput(input) as TreeData;
     expect(result.root).toBe('.');
     expect(result.nodes).toHaveLength(1);
     expect(result.nodes[0].name).toBe('file.txt');
@@ -32,7 +35,7 @@ describe('parseTreeOutput', () => {
     ├── file1.txt
     └── file2.txt
 `;
-    const result = parseTreeOutput(input);
+    const result = parseTreeOutput(input) as TreeData;
     expect(result.root).toBe('.');
     expect(result.nodes).toHaveLength(1);
     expect(result.nodes[0].name).toBe('folder');
@@ -52,7 +55,7 @@ describe('parseTreeOutput', () => {
 └── folder2
     └── file2.txt
 `;
-    const result = parseTreeOutput(input);
+    const result = parseTreeOutput(input) as TreeData;
     expect(result.root).toBe('.');
     expect(result.nodes).toHaveLength(2);
 
@@ -78,7 +81,7 @@ describe('parseTreeOutput', () => {
 ├── real_folder
 └── link_folder -> ../some/other/path
 `;
-    const result = parseTreeOutput(input);
+    const result = parseTreeOutput(input) as TreeData;
     expect(result.root).toBe('.');
     expect(result.nodes).toHaveLength(2);
     expect(result.nodes[1].name).toBe('link_folder');
@@ -98,7 +101,7 @@ describe('parseTreeOutput', () => {
 │   └── package.json
 └── readme.md
 `;
-    const result = parseTreeOutput(input);
+    const result = parseTreeOutput(input) as TreeData;
     expect(result.nodes).toHaveLength(3);
 
     const backend = result.nodes[0];
@@ -124,7 +127,7 @@ describe('parseTreeOutput', () => {
 └── folder2
     └── file2.txt
 `;
-    const result = parseTreeOutput(input);
+    const result = parseTreeOutput(input) as TreeData;
     const allIds = new Set<string>();
 
     const collectIds = (nodes: TreeNode[]) => {
@@ -144,7 +147,7 @@ describe('parseTreeOutput', () => {
 └── folder
     └── file.txt
 `;
-    const result = parseTreeOutput(input);
+    const result = parseTreeOutput(input) as TreeData;
     const folder = result.nodes[0];
     const file = folder.children[0];
 
@@ -158,7 +161,7 @@ describe('parseTreeOutput', () => {
 └── folder
     └── file.txt
 `;
-    const result = parseTreeOutput(input);
+    const result = parseTreeOutput(input) as TreeData;
     expect(result.nodes[0].isExpanded).toBe(true);
   });
 
@@ -174,7 +177,7 @@ dine
 
 6 directories, 0 files
 `;
-    const result = parseTreeOutput(input);
+    const result = parseTreeOutput(input) as TreeData;
     expect(result.root).toBe('dine');
     expect(result.nodes).toHaveLength(6);
     expect(result.nodes.map((n) => n.name)).toEqual([
@@ -200,7 +203,7 @@ dine
 Some random text here
 This should be ignored
 `;
-    const result = parseTreeOutput(input);
+    const result = parseTreeOutput(input) as TreeData;
     expect(result.root).toBe('.');
     expect(result.nodes).toHaveLength(2);
     expect(result.nodes[0].name).toBe('src');
@@ -216,7 +219,7 @@ This should be ignored
 ├── folder2
 │   └── file2.txt
 `;
-    const result = parseTreeOutput(input);
+    const result = parseTreeOutput(input) as TreeData;
     expect(result.nodes).toHaveLength(2);
     expect(result.nodes[0].name).toBe('folder1');
     expect(result.nodes[1].name).toBe('folder2');
@@ -232,7 +235,7 @@ project
 2 directories, 1 file
 Total: 15 files
 `;
-    const result = parseTreeOutput(input);
+    const result = parseTreeOutput(input) as TreeData;
     expect(result.root).toBe('project');
     expect(result.nodes).toHaveLength(3);
     expect(result.nodes.every((n) => !n.name.includes('Total'))).toBe(true);
@@ -262,7 +265,7 @@ next-test
 ├── README.md
 └── tsconfig.json
 `;
-    const result = parseTreeOutput(input);
+    const result = parseTreeOutput(input) as TreeData;
     expect(result.root).toBe('next-test');
 
     // Should have 9 root level items (2 directories + 7 files)
@@ -305,5 +308,93 @@ next-test
       'README.md',
       'tsconfig.json',
     ]);
+  });
+
+  it('should correctly parse neocm project', () => {
+    const input = `.
+├── backend
+│   ├── auditlog
+│   ├── bruno
+│   ├── common_tools
+│   ├── media
+│   ├── neocm
+│   ├── scripts
+│   ├── backend.env
+│   ├── curlapi.sh
+│   ├── db.sqlite3
+│   ├── deploy_backend.sh
+│   ├── docker-entrypoint.sh
+│   ├── Dockerfile
+│   ├── gen_frontend_queries.sh
+│   ├── gen_frontend_types.sh
+│   ├── gunicorn.conf.py
+│   ├── LICENSE
+│   ├── manage.py
+│   ├── pgpy.ipynb
+│   ├── README.md
+│   ├── requirements.txt
+│   ├── try_gcm.py
+│   └── uwsgi.ini
+├── frontend
+│   ├── app
+│   ├── public
+│   ├── deploy_frontend.sh
+│   ├── Dockerfile
+│   ├── package.json
+│   ├── pnpm-lock.yaml
+│   ├── postcss.config.js
+│   ├── README.md
+│   ├── tailwind.config.ts
+│   ├── tsconfig.json
+│   └── vite.config.ts
+├── compose.prod.yml
+├── compose.yml
+├── pack_repo.sh
+└── readme.md
+`;
+    const result = parseTreeOutput(input) as TreeData;
+    expect(result.root).toBe('.');
+
+    // Check backend directory
+    const backendDir = result.nodes.find((n) => n.name === 'backend');
+    expect(backendDir).toBeDefined();
+    expect(backendDir!.type).toBe('directory');
+    expect(backendDir!.children.length).toBeGreaterThan(1);
+    expect(backendDir!.children[0].name).toBe('auditlog');
+  });
+
+  it('should handle irregular whitespace characters correctly', () => {
+    // This test uses irregular whitespace characters like non-breaking space (\u00A0)
+    // and other Unicode whitespace characters that can cause parsing issues
+    const input = `.
+├──\u00A0backend
+│\u00A0\u00A0\u00A0├──\u00A0auditlog
+│\u00A0\u00A0\u00A0├──\u00A0bruno
+│\u00A0\u00A0\u00A0├──\u00A0common_tools
+│\u00A0\u00A0\u00A0├──\u00A0scripts
+│\u00A0\u00A0\u00A0├──\u00A0backend.env
+│\u00A0\u00A0\u00A0└──\u00A0uwsgi.ini
+├──\u00A0frontend
+│\u00A0\u00A0\u00A0├──\u00A0app
+│\u00A0\u00A0\u00A0├──\u00A0public
+│\u00A0\u00A0\u00A0└──\u00A0package.json
+└──\u00A0readme.md
+`;
+    const result = parseTreeOutput(input) as TreeData;
+    expect(result.root).toBe('.');
+
+    // Check that directories and files are parsed correctly despite irregular whitespace
+    const backendDir = result.nodes.find((n) => n.name === 'backend');
+    expect(backendDir).toBeDefined();
+    expect(backendDir!.type).toBe('directory');
+    expect(backendDir!.children.length).toBeGreaterThan(0);
+
+    const frontendDir = result.nodes.find((n) => n.name === 'frontend');
+    expect(frontendDir).toBeDefined();
+    expect(frontendDir!.type).toBe('directory');
+
+    const readmeFile = result.nodes.find((n) => n.name === 'readme.md');
+    expect(readmeFile).toBeDefined();
+    expect(readmeFile!.type).toBe('file');
   });
 });
