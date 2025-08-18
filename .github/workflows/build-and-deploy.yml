@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    branches:
-      - master
 
 permissions:
   contents: read
@@ -33,16 +30,17 @@ jobs:
         run: pnpm install
 
       - name: Build site
-        if: github.ref == 'refs/heads/master'
         run: pnpm build
 
       - name: Publish
-        if: github.ref == 'refs/heads/master'
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           wranglerVersion: 4.30.0
+
+      - name: Build site for github pages
+        run: 'pnpm run clean && pnpm build:gh-pages'
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

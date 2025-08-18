@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build:gh-pages": "vite build --base=/asciitreman/",
+    "clean": "rm -rf dist",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest",
